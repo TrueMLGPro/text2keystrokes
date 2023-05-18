@@ -7,7 +7,7 @@ import pyautogui
 import pyKey as pk
 from rich import print as rprint
 from rich.progress import Progress, track
-from rich.prompt import Prompt
+from rich.prompt import Prompt, IntPrompt, FloatPrompt
 
 text_input = ""
 version = "v1.1"
@@ -76,25 +76,13 @@ def main():
 	input_type: str = init_input()
 
 	if input_type == "Raw Text":
-		text_input = input("💬 Enter the text to convert to keystrokes: ")
+		text_input = Prompt.ask("💬 Enter the text to convert to keystrokes", default="hello world")
 	elif input_type == "Text File":
 		txt_file = select_file()
 		text_input = read_file(txt_file)
 
-	delay_before_input = Prompt.ask("⏳ Input an amount of seconds to wait before sending the keystrokes: ", default=5)
-	delay_between_keystrokes = Prompt.ask("⏲  Specify an interval (can be a floating point number) inbetween keystroke sends: ", default=0.01)
-
-	# If `text_input` input is empty
-	if not text_input:
-		text_input = "test"
-
-	# If `delay_before_input` input is empty
-	if not delay_before_input:
-		delay_before_input = 5
-
-	# If `delay_between_keystrokes` input is empty
-	if not delay_between_keystrokes:
-		delay_between_keystrokes = 0.01
+	delay_before_input: int = IntPrompt.ask("⏳ Input an amount of seconds to wait before sending the keystrokes", default=5)
+	delay_between_keystrokes: float = FloatPrompt.ask("⏲  Specify an interval (can be a floating point number) inbetween keystroke sends", default=0.01)
 
 	# Splits text into a list of characters and replaces spaces with `SPACEBAR` or `space` key code depending on user's OS
 	normalized_text_keystrokes = [
